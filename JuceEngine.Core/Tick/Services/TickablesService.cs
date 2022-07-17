@@ -9,7 +9,6 @@ namespace JuceEngine.Core.Tick.Services
         readonly TickablesContainerTickable _preUpdateTickables = new TickablesContainerTickable();
         readonly TickablesContainerTickable _updateTickables = new TickablesContainerTickable();
         readonly TickablesContainerTickable _lateUpdateTickables = new TickablesContainerTickable();
-        readonly TickablesContainerTickable _fixedUpdateTickables = new TickablesContainerTickable();
 
         public void Tick()
         {

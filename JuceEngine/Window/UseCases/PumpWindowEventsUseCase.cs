@@ -1,4 +1,5 @@
 ﻿using JuceEngine.Core.Repositories;
+using Veldrid;
 using Veldrid.Sdl2;
 
 namespace JuceEngine.Window.UseCases
@@ -6,12 +7,15 @@ namespace JuceEngine.Window.UseCases
     public sealed class PumpWindowEventsUseCase
     {
         readonly IReadOnlySingleRepository<Sdl2Window> _windowRepository;
+        readonly ISingleRepository<InputSnapshot> _currentFrameInputSnapshotRepository;
 
         public PumpWindowEventsUseCase(
-            IReadOnlySingleRepository<Sdl2Window> windowRepository
+            IReadOnlySingleRepository<Sdl2Window> windowRepository,
+            ISingleRepository<InputSnapshot> currentFrameInputSnapshotRepository
             )
         {
             _windowRepository = windowRepository;
+            _currentFrameInputSnapshotRepository = currentFrameInputSnapshotRepository;
         }
 
         public void Execute()
@@ -28,7 +32,9 @@ namespace JuceEngine.Window.UseCases
                 return;
             }
 
-            window.PumpEvents();
+            InputSnapshot inputSnapshot = window.PumpEvents();
+
+            _currentFrameInputSnapshotRepository.Set(inputSnapshot);
         }
     }
 }

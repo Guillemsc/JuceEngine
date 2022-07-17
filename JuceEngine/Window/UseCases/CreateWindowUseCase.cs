@@ -1,4 +1,5 @@
 ﻿using JuceEngine.Core.Repositories;
+using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
@@ -7,12 +8,15 @@ namespace JuceEngine.Window.UseCases
     public sealed class CreateWindowUseCase
     {
         readonly ISingleRepository<Sdl2Window> _windowRepository;
+        readonly ISingleRepository<GraphicsDevice> _graphicsDeviceRepository;
 
         public CreateWindowUseCase(
-            ISingleRepository<Sdl2Window> windowRepository
+            ISingleRepository<Sdl2Window> windowRepository,
+            ISingleRepository<GraphicsDevice> graphicsDeviceRepository
             )
         {
             _windowRepository = windowRepository;
+            _graphicsDeviceRepository = graphicsDeviceRepository;
         }
 
         public void Execute()
@@ -26,7 +30,14 @@ namespace JuceEngine.Window.UseCases
                 WindowTitle = "Veldrid Tutorial"
             };
 
-            Sdl2Window window = VeldridStartup.CreateWindow(windowCreateInfo);
+            VeldridStartup.CreateWindowAndGraphicsDevice(
+                windowCreateInfo,
+                out Sdl2Window window,
+                out GraphicsDevice graphicsDevice
+                );
+
+            _windowRepository.Set(window);
+            _graphicsDeviceRepository.Set(graphicsDevice);
         }
     }
 }

@@ -2,7 +2,8 @@
 using JuceEngine.Core.Tick.Services;
 using JuceEngine.General.Interactors;
 using JuceEngine.General.UseCases;
-using JuceEngine.Render.UseCases;
+using JuceEngine.InmediateModeUi.UseCases;
+using JuceEngine.Renderer.UseCases;
 using JuceEngine.Window.UseCases;
 
 namespace JuceEngine.General.Installers
@@ -14,12 +15,16 @@ namespace JuceEngine.General.Installers
             builder.Bind<LoadUseCase>()
                 .FromFunction(c => new LoadUseCase(
                     c.Resolve<CreateWindowUseCase>(),
-                    c.Resolve<CreateGraphicsDeviceUseCase>()
+                    c.Resolve<CreateRendererUseCase>(),
+                    c.Resolve<SetupInmediateModeUiUseCase>()
                 ));
 
             builder.Bind<TickUseCase>()
                 .FromFunction(c => new TickUseCase(
-                    c.Resolve<ITickablesService>()
+                    c.Resolve<ITickablesService>(),
+                    c.Resolve<PumpWindowEventsUseCase>(),
+                    c.Resolve<RenderUseCase>(),
+                    c.Resolve<UpdateInmediateModeUiUseCase>()
                 ));
 
             builder.Bind<IJuceEngineInteractor>()

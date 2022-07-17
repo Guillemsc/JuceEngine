@@ -1,6 +1,7 @@
 ﻿using JuceEngine.Core.Di.Builder;
 using JuceEngine.Core.Di.Installers;
-using JuceEngine.Render.Installers;
+using JuceEngine.InmediateModeUi.Installers;
+using JuceEngine.Renderer.Installers;
 using JuceEngine.Services.Installers;
 using JuceEngine.Window.Installers;
 
@@ -13,7 +14,8 @@ namespace JuceEngine.General.Installers
             builder.InstallInteractor();
             builder.InstallServices();
             builder.InstallWindow();
-            builder.InstallRender();
+            builder.InstallRenderer();
+            builder.InstallInmediateModeUi();
         }
     }
 }

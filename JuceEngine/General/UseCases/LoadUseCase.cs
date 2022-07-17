@@ -1,4 +1,5 @@
-﻿using JuceEngine.Render.UseCases;
+﻿using JuceEngine.InmediateModeUi.UseCases;
+using JuceEngine.Renderer.UseCases;
 using JuceEngine.Window.UseCases;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,21 +9,25 @@ namespace JuceEngine.General.UseCases
     public sealed class LoadUseCase
     {
         readonly CreateWindowUseCase _createWindowUseCase;
-        readonly CreateGraphicsDeviceUseCase _createGraphicsDeviceUseCase;
+        readonly CreateRendererUseCase _createRendererUseCase;
+        readonly SetupInmediateModeUiUseCase _setupImGuiUseCase;
 
         public LoadUseCase(
             CreateWindowUseCase createWindowUseCase,
-            CreateGraphicsDeviceUseCase createGraphicsDeviceUseCase
+            CreateRendererUseCase createRendererUseCase,
+            SetupInmediateModeUiUseCase setupImGuiUseCase
             )
         {
             _createWindowUseCase = createWindowUseCase;
-            _createGraphicsDeviceUseCase = createGraphicsDeviceUseCase;
+            _createRendererUseCase = createRendererUseCase;
+            _setupImGuiUseCase = setupImGuiUseCase;
         }
 
         public Task Execute(CancellationToken cancellationToken)
         {
             _createWindowUseCase.Execute();
-            _createGraphicsDeviceUseCase.Execute();
+            _createRendererUseCase.Execute();
+            _setupImGuiUseCase.Execute();
 
             return Task.CompletedTask;
         }
