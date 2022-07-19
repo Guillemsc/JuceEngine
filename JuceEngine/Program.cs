@@ -19,7 +19,7 @@ namespace JuceEngine.Services.Installers
 
             await juceEngineInteractor.Value.Load(CancellationToken.None);
 
-            while (!juceEngineInteractor.Value.Quit)
+            while (!juceEngineInteractor.Value.WantsToQuit())
             {
                 juceEngineInteractor.Value.Tick();
             }

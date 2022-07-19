@@ -2,13 +2,13 @@
 using System;
 using Veldrid;
 
-namespace JuceEngine.InmediateModeUi.UseCases
+namespace JuceEngine.ImmediateModeUi.UseCases
 {
-    public sealed class RenderInmediateModeUiUseCase
+    public sealed class RenderImmediateModeUiUseCase
     {
         readonly IReadOnlySingleRepository<ImGuiRenderer> _imGuiRendererRepository;
 
-        public RenderInmediateModeUiUseCase(
+        public RenderImmediateModeUiUseCase(
             IReadOnlySingleRepository<ImGuiRenderer> imGuiRendererRepository
             )
         {
@@ -17,7 +17,6 @@ namespace JuceEngine.InmediateModeUi.UseCases
 
         public void Execute(GraphicsDevice graphicsDevice, CommandList commandList)
         {
-
             bool hasImGuiRenderer = _imGuiRendererRepository.TryGet(out ImGuiRenderer renderer);
 
             if(!hasImGuiRenderer)

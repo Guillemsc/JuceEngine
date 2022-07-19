@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using JuceEngine.Core.Repositories;
-using JuceEngine.InmediateModeUi.UseCases;
+using JuceEngine.ImmediateModeUi.UseCases;
+using JuceEngine.Renderers.General.UseCases;
 using Veldrid;
 
 namespace JuceEngine.Renderer.UseCases
@@ -9,17 +10,20 @@ namespace JuceEngine.Renderer.UseCases
     {
         readonly IReadOnlySingleRepository<GraphicsDevice> _graphicsDeviceRepository;
         readonly IReadOnlySingleRepository<CommandList> _commandListRepository;
-        readonly RenderInmediateModeUiUseCase _renderImGuiUseCase;
+        readonly RenderImmediateModeUiUseCase _renderImGuiUseCase;
+        readonly RenderRenderersUseCase _renderRenderersUseCase;
 
         public RenderUseCase(
             IReadOnlySingleRepository<GraphicsDevice> graphicsDeviceRepository,
             IReadOnlySingleRepository<CommandList> commandListRepository,
-            RenderInmediateModeUiUseCase renderImGuiUseCase
+            RenderImmediateModeUiUseCase renderImGuiUseCase,
+            RenderRenderersUseCase renderRenderersUseCase
             )
         {
             _graphicsDeviceRepository = graphicsDeviceRepository;
             _commandListRepository = commandListRepository;
             _renderImGuiUseCase = renderImGuiUseCase;
+            _renderRenderersUseCase = renderRenderersUseCase;
         }
 
         public void Execute()
@@ -38,18 +42,11 @@ namespace JuceEngine.Renderer.UseCases
                 return;
             }
 
-            // Draw whatever you want here.
-            if (ImGui.Begin("Test Window"))
-            {
-                ImGui.Text("Hello");
-            }
-            ImGui.End();
-
-
             commandList.Begin();
             commandList.SetFramebuffer(graphicsDevice.MainSwapchain.Framebuffer);
             commandList.ClearColorTarget(0, new RgbaFloat(0, 0, 0.2f, 1f));
 
+            _renderRenderersUseCase.Execute(graphicsDevice, commandList);
             _renderImGuiUseCase.Execute(graphicsDevice, commandList);
 
             commandList.End();

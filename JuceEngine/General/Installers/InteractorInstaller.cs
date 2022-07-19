@@ -2,8 +2,11 @@
 using JuceEngine.Core.Tick.Services;
 using JuceEngine.General.Interactors;
 using JuceEngine.General.UseCases;
-using JuceEngine.InmediateModeUi.UseCases;
+using JuceEngine.ImmediateModeUi.UseCases;
+using JuceEngine.Project.UseCases;
 using JuceEngine.Renderer.UseCases;
+using JuceEngine.Renderers.General.UseCases;
+using JuceEngine.Resources.UseCases;
 using JuceEngine.Window.UseCases;
 
 namespace JuceEngine.General.Installers
@@ -16,21 +19,31 @@ namespace JuceEngine.General.Installers
                 .FromFunction(c => new LoadUseCase(
                     c.Resolve<CreateWindowUseCase>(),
                     c.Resolve<CreateRendererUseCase>(),
-                    c.Resolve<SetupInmediateModeUiUseCase>()
+                    c.Resolve<SetupImmediateModeUiUseCase>(),
+                    c.Resolve<SetProjectPathUseCase>(),
+                    c.Resolve<LoadProjectResourcesUseCase>(),
+                    c.Resolve<LoadRenderersUseCase>()
                 ));
 
             builder.Bind<TickUseCase>()
                 .FromFunction(c => new TickUseCase(
                     c.Resolve<ITickablesService>(),
                     c.Resolve<PumpWindowEventsUseCase>(),
+                    c.Resolve<TryResizeRendererUseCase>(),
                     c.Resolve<RenderUseCase>(),
-                    c.Resolve<UpdateInmediateModeUiUseCase>()
+                    c.Resolve<UpdateImmediateModeUiUseCase>()
+                ));
+
+            builder.Bind<WantsToQuitUseCase>()
+                .FromFunction(c => new WantsToQuitUseCase(
+                    c.Resolve<IsWindowClosedUseCase>()
                 ));
 
             builder.Bind<IJuceEngineInteractor>()
                 .FromFunction(c => new JuceEngineInteractor(
                     c.Resolve<LoadUseCase>(),
-                    c.Resolve<TickUseCase>()
+                    c.Resolve<TickUseCase>(),
+                    c.Resolve<WantsToQuitUseCase>()
                 ));
         }
     }

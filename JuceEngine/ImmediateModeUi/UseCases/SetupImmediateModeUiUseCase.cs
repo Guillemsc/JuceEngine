@@ -1,21 +1,26 @@
-﻿using JuceEngine.Core.Repositories;
+﻿using JuceEngine.Core.Maths.Data;
+using JuceEngine.Core.Repositories;
+using JuceEngine.Window.Data;
 using System;
 using Veldrid;
 
-namespace JuceEngine.InmediateModeUi.UseCases
+namespace JuceEngine.ImmediateModeUi.UseCases
 {
-    public sealed class SetupInmediateModeUiUseCase
+    public sealed class SetupImmediateModeUiUseCase
     {
         readonly IReadOnlySingleRepository<GraphicsDevice> _graphicsDeviceRepository;
         readonly ISingleRepository<ImGuiRenderer> _imGuiRendererRepository;
+        readonly WindowSizeData _windowSizeData;
 
-        public SetupInmediateModeUiUseCase(
+        public SetupImmediateModeUiUseCase(
             IReadOnlySingleRepository<GraphicsDevice> graphicsDeviceRepository,
-            ISingleRepository<ImGuiRenderer> imGuiRendererRepository
+            ISingleRepository<ImGuiRenderer> imGuiRendererRepository,
+            WindowSizeData windowSizeData
             )
         {
             _graphicsDeviceRepository = graphicsDeviceRepository;
             _imGuiRendererRepository = imGuiRendererRepository;
+            _windowSizeData = windowSizeData;
         }
 
         public void Execute()
@@ -29,13 +34,13 @@ namespace JuceEngine.InmediateModeUi.UseCases
                 return;
             }
 
-            CommandList commandList = graphicsDevice.ResourceFactory.CreateCommandList();
+            Int2 windowSize = _windowSizeData.Size;
 
             ImGuiRenderer imGuiRenderer = new ImGuiRenderer(
                 graphicsDevice,
                 graphicsDevice.MainSwapchain.Framebuffer.OutputDescription,
-                960,
-                540
+                (int)graphicsDevice.MainSwapchain.Framebuffer.Width,
+                (int)graphicsDevice.MainSwapchain.Framebuffer.Height
             );
 
             _imGuiRendererRepository.Set(imGuiRenderer);

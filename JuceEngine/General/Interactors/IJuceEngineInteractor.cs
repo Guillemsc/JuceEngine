@@ -5,9 +5,9 @@ namespace JuceEngine.General.Interactors
 {
     public interface IJuceEngineInteractor
     {
-        bool Quit { get; }
 
         Task Load(CancellationToken cancellationToken);
         void Tick();
+        bool WantsToQuit();
     }
 }

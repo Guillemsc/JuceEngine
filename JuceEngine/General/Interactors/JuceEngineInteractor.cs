@@ -8,18 +8,20 @@ namespace JuceEngine.General.Interactors
     {
         readonly LoadUseCase _loadUseCase;
         readonly TickUseCase _tickUseCase;
+        readonly WantsToQuitUseCase _wantsToQuitUseCase;
 
         public JuceEngineInteractor(
             LoadUseCase loadUseCase,
-            TickUseCase tickUseCase
+            TickUseCase tickUseCase,
+            WantsToQuitUseCase wantsToQuitUseCase
             )
         {
             _loadUseCase = loadUseCase;
             _tickUseCase = tickUseCase;
+            _wantsToQuitUseCase = wantsToQuitUseCase;
         }
 
-        public bool Quit { get; }
-
+  
         public Task Load(CancellationToken cancellationToken)
         {
             return _loadUseCase.Execute(cancellationToken);
@@ -28,6 +30,11 @@ namespace JuceEngine.General.Interactors
         public void Tick()
         {
             _tickUseCase.Execute();
+        }
+
+        public bool WantsToQuit()
+        {
+            return _wantsToQuitUseCase.Execute(); 
         }
     }
 }

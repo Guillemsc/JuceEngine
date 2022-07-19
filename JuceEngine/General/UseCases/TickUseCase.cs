@@ -1,5 +1,5 @@
 ﻿using JuceEngine.Core.Tick.Services;
-using JuceEngine.InmediateModeUi.UseCases;
+using JuceEngine.ImmediateModeUi.UseCases;
 using JuceEngine.Renderer.UseCases;
 using JuceEngine.Window.UseCases;
 
@@ -9,18 +9,21 @@ namespace JuceEngine.General.UseCases
     {
         readonly ITickablesService _tickableService;
         readonly PumpWindowEventsUseCase _pumpWindowEventsUseCase;
+        readonly TryResizeRendererUseCase _tryResizeRendererUseCase;
         readonly RenderUseCase _renderUseCase;
-        readonly UpdateInmediateModeUiUseCase _updateImGuiUseCase;
+        readonly UpdateImmediateModeUiUseCase _updateImGuiUseCase;
 
         public TickUseCase(
             ITickablesService tickableService,
             PumpWindowEventsUseCase pumpWindowEventsUseCase,
+            TryResizeRendererUseCase tryResizeRendererUseCase,
             RenderUseCase renderUseCase,
-            UpdateInmediateModeUiUseCase updateImGuiUseCase
+            UpdateImmediateModeUiUseCase updateImGuiUseCase
             )
         {
             _tickableService = tickableService;
             _pumpWindowEventsUseCase = pumpWindowEventsUseCase;
+            _tryResizeRendererUseCase = tryResizeRendererUseCase;
             _renderUseCase = renderUseCase;
             _updateImGuiUseCase = updateImGuiUseCase;
         }
@@ -32,6 +35,7 @@ namespace JuceEngine.General.UseCases
 
             _tickableService.Tick();
 
+            _tryResizeRendererUseCase.Execute();
             _renderUseCase.Execute();
         }
     }

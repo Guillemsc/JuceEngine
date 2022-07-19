@@ -1,4 +1,5 @@
 ﻿using JuceEngine.Core.Repositories;
+using JuceEngine.Window.Data;
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
@@ -8,15 +9,15 @@ namespace JuceEngine.Window.UseCases
     public sealed class CreateWindowUseCase
     {
         readonly ISingleRepository<Sdl2Window> _windowRepository;
-        readonly ISingleRepository<GraphicsDevice> _graphicsDeviceRepository;
+        readonly WindowResizedUseCase _windowResizedUseCase;
 
         public CreateWindowUseCase(
             ISingleRepository<Sdl2Window> windowRepository,
-            ISingleRepository<GraphicsDevice> graphicsDeviceRepository
+            WindowResizedUseCase windowResizedUseCase
             )
         {
             _windowRepository = windowRepository;
-            _graphicsDeviceRepository = graphicsDeviceRepository;
+            _windowResizedUseCase = windowResizedUseCase;
         }
 
         public void Execute()
@@ -30,14 +31,23 @@ namespace JuceEngine.Window.UseCases
                 WindowTitle = "Veldrid Tutorial"
             };
 
-            VeldridStartup.CreateWindowAndGraphicsDevice(
-                windowCreateInfo,
-                out Sdl2Window window,
-                out GraphicsDevice graphicsDevice
+            SDL_WindowFlags sdlWindowFlags = SDL_WindowFlags.OpenGL | SDL_WindowFlags.Resizable;
+
+            Sdl2Window window = new Sdl2Window(
+                windowCreateInfo.WindowTitle,
+                windowCreateInfo.X,
+                windowCreateInfo.Y,
+                windowCreateInfo.WindowWidth,
+                windowCreateInfo.WindowHeight,
+                sdlWindowFlags,
+                threadedProcessing: true
                 );
 
             _windowRepository.Set(window);
-            _graphicsDeviceRepository.Set(graphicsDevice);
+
+            window.Resized += _windowResizedUseCase.Execute;
+
+            _windowResizedUseCase.Execute();
         }
     }
 }
